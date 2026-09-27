@@ -13,7 +13,7 @@ a safe logical response and operator-control policy.
 from dataclasses import dataclass
 from typing import Optional
 
-from .risk_engine import RiskAssessment
+from .risk_engine import RiskAssessment, RiskEngine
 
 
 @dataclass
@@ -236,3 +236,39 @@ class SafetyEngine:
             ),
             endpoint=endpoint,
         )
+
+
+def safety_action(score: float, attack_detected: bool) -> dict:
+    """Return the legacy dictionary policy for a numeric risk score.
+
+    New code should use ``SafetyEngine.evaluate`` with a ``RiskAssessment``.
+    This adapter keeps existing callers compatible with that policy API.
+    """
+    level = RiskEngine.get_risk_level(float(score))
+    decision = SafetyEngine().evaluate(
+        RiskAssessment(
+            attack_probability=0.0,
+            anomaly_score=0.0,
+            criticality=0.0,
+            risk_score=float(score),
+            risk_level=level,
+            recommended_action="",
+            reason="",
+        )
+    )
+
+    mode_by_level = {
+        "LOW": "NORMAL",
+        "MEDIUM": "MONITOR",
+        "HIGH": "PROTECTIVE",
+        "CRITICAL": "SAFE_MODE",
+    }
+    return {
+        "mode": mode_by_level[level],
+        "actions": {
+            "operator_confirmation_required":
+                decision.operator_confirmation_required,
+            "logical_isolation": decision.logical_isolation,
+            "alert": decision.alert or bool(attack_detected),
+        },
+    }

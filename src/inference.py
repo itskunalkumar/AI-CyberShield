@@ -87,168 +87,71 @@ ANOMALY_CALIBRATION_PATH = (
 )
 
 
-# ============================================================
-# LOAD FEATURE CONFIGURATION
-# ============================================================
-
-print("Loading feature configuration...")
-
-with open(
-    FEATURES_PATH,
-    "r",
-    encoding="utf-8",
-) as f:
-
-    feature_config = json.load(f)
-
-
-BASE_FEATURES = feature_config[
-    "base_features"
-]
-
-TEMPORAL_FEATURES = feature_config[
-    "temporal_features"
-]
-
-ALL_FEATURES = feature_config[
-    "all_features"
-]
-
-
-print(
-    f"Base features: {len(BASE_FEATURES)}"
-)
-
-print(
-    f"Temporal features: {len(TEMPORAL_FEATURES)}"
-)
-
-print(
-    f"Total model features: {len(ALL_FEATURES)}"
-)
-
-
-# ============================================================
-# LOAD XGBOOST MODEL
-# ============================================================
-
-print("Loading XGBoost model...")
-
-xgb_model = xgb.XGBClassifier()
-
-xgb_model.load_model(
-    XGB_MODEL_PATH
-)
-
-
-model_features = (
-    xgb_model
-    .get_booster()
-    .feature_names
-)
-
-
-if model_features is None:
-
-    raise ValueError(
-        "XGBoost model does not contain feature names."
-    )
-
-
-if len(model_features) != len(ALL_FEATURES):
-
-    raise ValueError(
-        "XGBoost feature count mismatch: "
-        f"model={len(model_features)}, "
-        f"config={len(ALL_FEATURES)}"
-    )
-
-
-if model_features != ALL_FEATURES:
-
-    raise ValueError(
-        "XGBoost feature order does not match "
-        "temporal_features.json"
-    )
-
-
-print(
-    f"XGBoost features verified: "
-    f"{len(model_features)}"
-)
-
-
-# ============================================================
-# LOAD ISOLATION FOREST
-# ============================================================
-
-print("Loading Isolation Forest...")
-
-isolation_model = joblib.load(
-    ISOLATION_MODEL_PATH
-)
-
-
-# ============================================================
-# LOAD ANOMALY SCALER
-# ============================================================
-
-print("Loading anomaly scaler...")
-
-anomaly_scaler = joblib.load(
-    ANOMALY_SCALER_PATH
-)
-
-
-# ============================================================
-# LOAD ANOMALY CALIBRATION
-# ============================================================
-
-print("Loading anomaly calibration...")
-
-with open(
-    ANOMALY_CALIBRATION_PATH,
-    "r",
-    encoding="utf-8",
-) as f:
-
-    anomaly_calibration = json.load(f)
-
-
-CALIBRATION_MIN = float(
-    anomaly_calibration["min"]
-)
-
-CALIBRATION_MAX = float(
-    anomaly_calibration["max"]
-)
-
-ANOMALY_THRESHOLD = float(
-    anomaly_calibration["threshold"]
-)
-
-
-# ============================================================
-# SHAP
-# ============================================================
-
-print("Creating SHAP explainer...")
-
-shap_explainer = shap.TreeExplainer(
-    xgb_model
-)
-
-
-# ============================================================
-# ENGINES
-# ============================================================
-
+# Artifacts are loaded only when inference is requested. This keeps importing
+# the module safe in environments that do not include the trained model files.
+BASE_FEATURES = None
+TEMPORAL_FEATURES = None
+ALL_FEATURES = None
+xgb_model = None
+isolation_model = None
+anomaly_scaler = None
+CALIBRATION_MIN = None
+CALIBRATION_MAX = None
+ANOMALY_THRESHOLD = None
+shap_explainer = None
 risk_engine = RiskEngine()
-
 safety_engine = SafetyEngine()
 
 
-print("AI-CyberShield inference engine loaded.")
+def _load_feature_config():
+    global BASE_FEATURES, TEMPORAL_FEATURES, ALL_FEATURES
+    if BASE_FEATURES is not None:
+        return
+
+    with open(FEATURES_PATH, "r", encoding="utf-8") as feature_file:
+        feature_config = json.load(feature_file)
+
+    BASE_FEATURES = feature_config["base_features"]
+    TEMPORAL_FEATURES = feature_config["temporal_features"]
+    ALL_FEATURES = feature_config["all_features"]
+
+
+def _load_artifacts():
+    global xgb_model, isolation_model, anomaly_scaler
+    global CALIBRATION_MIN, CALIBRATION_MAX, ANOMALY_THRESHOLD
+    global shap_explainer
+
+    if xgb_model is not None:
+        return
+
+    _load_feature_config()
+
+    model = xgb.XGBClassifier()
+    model.load_model(XGB_MODEL_PATH)
+    model_features = model.get_booster().feature_names
+
+    if model_features is None:
+        raise ValueError("XGBoost model does not contain feature names.")
+    if len(model_features) != len(ALL_FEATURES):
+        raise ValueError(
+            "XGBoost feature count mismatch: "
+            f"model={len(model_features)}, config={len(ALL_FEATURES)}"
+        )
+    if model_features != ALL_FEATURES:
+        raise ValueError(
+            "XGBoost feature order does not match temporal_features.json"
+        )
+
+    with open(ANOMALY_CALIBRATION_PATH, "r", encoding="utf-8") as calibration_file:
+        anomaly_calibration = json.load(calibration_file)
+
+    xgb_model = model
+    isolation_model = joblib.load(ISOLATION_MODEL_PATH)
+    anomaly_scaler = joblib.load(ANOMALY_SCALER_PATH)
+    CALIBRATION_MIN = float(anomaly_calibration["min"])
+    CALIBRATION_MAX = float(anomaly_calibration["max"])
+    ANOMALY_THRESHOLD = float(anomaly_calibration["threshold"])
+    shap_explainer = shap.TreeExplainer(xgb_model)
 
 
 # ============================================================
@@ -275,6 +178,8 @@ def create_temporal_features(
 
     if df.empty:
         raise ValueError("Telemetry dataframe is empty.")
+
+    _load_feature_config()
 
     # --------------------------------------------------------
     # 1. Remove duplicate column names
@@ -649,6 +554,8 @@ def calculate_anomaly_score(
     learned from validation data.
     """
 
+    _load_artifacts()
+
     X_scaled = anomaly_scaler.transform(
         X
     )
@@ -698,6 +605,8 @@ def create_shap_explanation(
     """
     Explain the final prediction using SHAP.
     """
+
+    _load_artifacts()
 
     sample = X.iloc[[-1]]
 
@@ -806,6 +715,8 @@ def predict_security_event(
     -------
     dict
     """
+
+    _load_artifacts()
 
     # --------------------------------------------------------
     # Validate input

@@ -363,6 +363,23 @@ class RiskEngine:
         )
 
 
+# Backward-compatible function API used by ``src.predict`` and older tests.
+def risk_score(
+    attack_probability: float,
+    anomaly_score: float,
+    criticality: float = 0.5,
+) -> float:
+    return RiskEngine().calculate_risk_score(
+        attack_probability,
+        anomaly_score,
+        criticality,
+    )
+
+
+def risk_level(score: float) -> str:
+    return RiskEngine.get_risk_level(float(score))
+
+
 # ============================================================
 # TEST
 # ============================================================
