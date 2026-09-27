@@ -1,0 +1,65 @@
+{
+  "feature_count": 845,
+  "training_rows": 5358,
+  "training_benign_rows": 3545,
+  "validation_rows": 1798,
+  "test_rows": 7198,
+  "threshold": 0.2,
+  "calibration": {
+    "method": "validation_min_max",
+    "min": -0.16065693010863197,
+    "max": 0.05609922486101393
+  },
+  "validation": {
+    "precision": 0.5403508771929825,
+    "recall": 0.8433734939759037,
+    "f1": 0.6586826347305389,
+    "roc_auc": 0.5608603907154041,
+    "pr_auc": 0.5379503861983321
+  },
+  "test": {
+    "precision": 0.7851931910294515,
+    "recall": 0.5055671537926235,
+    "f1": 0.6150915440787385,
+    "roc_auc": 0.4213988073812781,
+    "pr_auc": 0.7612143173011768
+  },
+  "scenarios": {
+    "S3_arp_spoof_bss_meter_half_values": {
+      "rows": 1800,
+      "attack_rate": 1.0,
+      "precision": 1.0,
+      "recall": 0.38222222222222224,
+      "f1": 0.5530546623794212,
+      "roc_auc": null,
+      "pr_auc": 1.0
+    },
+    "S4_arp_spoof_loads_pv_two_phase": {
+      "rows": 1798,
+      "attack_rate": 0.6991101223581757,
+      "precision": 0.7592319054652881,
+      "recall": 0.8178202068416865,
+      "f1": 0.787437763309077,
+      "roc_auc": 0.5605878797771299,
+      "pr_auc": 0.6784400905834256
+    },
+    "S5_arp_spoof_loads_pv_bss_two_phase": {
+      "rows": 1800,
+      "attack_rate": 0.745,
+      "precision": 0.7882676443629697,
+      "recall": 0.6413124533929903,
+      "f1": 0.7072368421052632,
+      "roc_auc": 0.5523980575741773,
+      "pr_auc": 0.7818539447299195
+    },
+    "S6_mqtt_supply_chain_compromise": {
+      "rows": 1800,
+      "attack_rate": 0.75,
+      "precision": 0.5809859154929577,
+      "recall": 0.24444444444444444,
+      "f1": 0.34410844629822734,
+      "roc_auc": 0.23961481481481484,
+      "pr_auc": 0.6387755450291582
+    }
+  }
+}

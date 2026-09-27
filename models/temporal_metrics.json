@@ -1,0 +1,67 @@
+{
+  "threshold": 0.3,
+  "feature_count": 845,
+  "best_iteration": 50,
+  "validation": {
+    "accuracy": 0.8470522803114572,
+    "precision": 0.8386411889596603,
+    "recall": 0.8652792990142387,
+    "f1": 0.8517520215633423,
+    "roc_auc": 0.8760286136843213,
+    "pr_auc": 0.8575328360903116
+  },
+  "test": {
+    "accuracy": 0.5484856904695748,
+    "precision": 0.9699021820917983,
+    "recall": 0.4485038274182324,
+    "f1": 0.6133714013799667,
+    "roc_auc": 0.8561176901111032,
+    "pr_auc": 0.9597038551991105
+  },
+  "scenarios": {
+    "S3_arp_spoof_bss_meter_half_values": {
+      "rows": 1800,
+      "attack_rate": 1.0,
+      "precision": 1.0,
+      "recall": 0.6244444444444445,
+      "f1": 0.7688098495212038,
+      "roc_auc": NaN,
+      "pr_auc": 0.9999999999999999,
+      "predicted_attacks": 1124,
+      "actual_attacks": 1800
+    },
+    "S4_arp_spoof_loads_pv_two_phase": {
+      "rows": 1798,
+      "attack_rate": 0.6991101223581757,
+      "precision": 0.9253246753246753,
+      "recall": 0.45346062052505964,
+      "f1": 0.608649225840897,
+      "roc_auc": 0.8358787830662155,
+      "pr_auc": 0.9177048341407953,
+      "predicted_attacks": 616,
+      "actual_attacks": 1257
+    },
+    "S5_arp_spoof_loads_pv_bss_two_phase": {
+      "rows": 1800,
+      "attack_rate": 0.745,
+      "precision": 0.8726591760299626,
+      "recall": 0.17375093214019388,
+      "f1": 0.2898009950248756,
+      "roc_auc": 0.8685718881139333,
+      "pr_auc": 0.9278832095813259,
+      "predicted_attacks": 267,
+      "actual_attacks": 1341
+    },
+    "S6_mqtt_supply_chain_compromise": {
+      "rows": 1800,
+      "attack_rate": 0.75,
+      "precision": 1.0,
+      "recall": 0.4822222222222222,
+      "f1": 0.6506746626686657,
+      "roc_auc": 0.8878831275720165,
+      "pr_auc": 0.9633579449129493,
+      "predicted_attacks": 651,
+      "actual_attacks": 1350
+    }
+  }
+}

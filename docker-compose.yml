@@ -1,0 +1,59 @@
+services:
+
+  api:
+    build: .
+    container_name: ai-cybershield-api
+    command: >
+      uvicorn src.api:app
+      --host 0.0.0.0
+      --port 8000
+    ports:
+      - "8001:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:Kunal%401008@postgres:5432/ai_cybershield
+      API_KEY: ${API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  dashboard:
+    build: .
+    container_name: ai-cybershield-dashboard
+    command: >
+      streamlit run dashboard/app.py
+      --server.address=0.0.0.0
+      --server.port=8501
+    ports:
+      - "8501:8501"
+    environment:
+      API_BASE_URL: http://api:8000
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    container_name: ai-cybershield-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Kunal@1008
+      POSTGRES_DB: ai_cybershield
+    ports:
+      - "5432:5432"
+    volumes:
+      - cybershield_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d ai_cybershield"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+
+volumes:
+  cybershield_postgres_data:

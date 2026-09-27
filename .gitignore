@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+models/*.joblib
+.ipynb_checkpoints/
+.env.*
+!.env.example
+*.pyc
+venv/
+models/*.pkl
+# Python virtual environments
+.venv311/
+.venv*/
+
+# Large dataset archives
+data4cyber_dataset.zip
+*.zip

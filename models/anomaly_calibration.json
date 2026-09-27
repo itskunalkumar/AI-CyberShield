@@ -1,0 +1,7 @@
+{
+  "method": "validation_min_max",
+  "min": -0.16065693010863197,
+  "max": 0.05609922486101393,
+  "threshold": 0.2,
+  "description": "Anomaly scores are normalized using fixed validation-set calibration values. These values must be reused during test and live inference."
+}
