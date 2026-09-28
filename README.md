@@ -159,9 +159,12 @@ docker compose up --build
 
 | Service | URL |
 | :--- | :--- |
-| 🖥️ Dashboard | http://localhost:8501 |
-| ⚙️ API + interactive docs | http://localhost:8001/docs |
-| 🗄️ PostgreSQL | `localhost:5432` |
+| 🖥️ Dashboard (Local) | http://localhost:8501 |
+| 🖥️ Dashboard (AWS Live) | http://ai-cybershield-alb-870998626.ap-south-1.elb.amazonaws.com/ |
+| ⚙️ API + interactive docs (Local) | http://localhost:8001/docs |
+| ⚙️ API + interactive docs (AWS Live) | http://ai-cybershield-alb-870998626.ap-south-1.elb.amazonaws.com/docs |
+| 🗄️ PostgreSQL (Local) | `localhost:5432` |
+| 🗄️ PostgreSQL (AWS RDS) | Managed PostgreSQL on AWS RDS |
 
 ### Option B · Local
 
