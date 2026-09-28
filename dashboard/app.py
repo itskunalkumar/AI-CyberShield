@@ -1,11 +1,20 @@
 import os
 from datetime import datetime
+from textwrap import dedent
 
 import pandas as pd
 import plotly.graph_objects as go
 import requests
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
+
+
+def render_html(markup):
+    """Render HTML without Markdown indentation turning it into code blocks."""
+    if isinstance(markup, str):
+        markup = dedent(markup)
+    return st.markdown(markup, unsafe_allow_html=True)
+
 
 
 # ============================================================
@@ -39,7 +48,7 @@ st_autorefresh(
 # CYBER UI
 # ============================================================
 
-st.markdown(
+render_html(
     """
     <style>
     :root {
@@ -658,8 +667,8 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
@@ -851,7 +860,7 @@ state_text = {
 # HEADER
 # ============================================================
 
-st.markdown(
+render_html(
     f"""
     <div class="topbar">
         <div class="brand">
@@ -873,8 +882,8 @@ st.markdown(
         </div>
     </div>
     """,
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
@@ -902,14 +911,14 @@ ticker = (
     else "Awaiting security telemetry..."
 )
 
-st.markdown(
+render_html(
     f"""
     <div class="ticker">
         <div class="ticker-inner">{ticker}</div>
     </div>
     """,
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
@@ -922,7 +931,7 @@ hero_col, signal_col = st.columns(
 )
 
 with hero_col:
-    st.markdown(
+    render_html(
         f"""
         <div class="hero">
             <div class="hero-gridlines"></div>
@@ -979,7 +988,7 @@ with signal_col:
             ),
         )
 
-        st.markdown(
+        render_html(
             f"""
             <div class="signal">
                 <div class="signal-head">
@@ -997,7 +1006,7 @@ with signal_col:
             unsafe_allow_html=True,
         )
 
-    st.markdown(
+    render_html(
         '<div class="signals">'
         '<div class="section-title">'
         '⚡ Live Signal Matrix'
@@ -1058,7 +1067,7 @@ with signal_col:
         else "NORMAL"
     )
 
-    st.markdown(
+    render_html(
         f"""
             <div class="live-grid">
                 <div class="live-cell">
@@ -1111,7 +1120,7 @@ overall_color = (
     else "#34d399"
 )
 
-st.markdown(
+render_html(
     f"""
     <div class="status">
         <div>
@@ -1140,8 +1149,8 @@ st.markdown(
         </div>
     </div>
     """,
-    unsafe_allow_html=True,
 )
+
 
 kpis = [
     (
@@ -1184,23 +1193,23 @@ for label, value, note in kpis:
 
 kpi_html += "</div>"
 
-st.markdown(
+render_html(
     kpi_html,
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
 # THREAT RADAR
 # ============================================================
 
-st.markdown(
+render_html(
     '<div class="panel">'
     '<div class="section-title">'
     '🌌 THREAT RADAR · ATTACK × ANOMALY × RISK'
     '</div>',
-    unsafe_allow_html=True,
 )
+
 
 if not events_df.empty:
     threat = events_df.tail(100).copy()
@@ -1383,10 +1392,10 @@ else:
         "Waiting for telemetry events to populate the threat radar."
     )
 
-st.markdown(
+render_html(
     "</div>",
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
@@ -1399,7 +1408,7 @@ left, right = st.columns(
 )
 
 with left:
-    st.markdown(
+    render_html(
         '<div class="panel">'
         '<div class="section-title">'
         '🚨 ALERT COMMAND CENTER'
@@ -1457,7 +1466,7 @@ with left:
                 else "—"
             )
 
-            st.markdown(
+            render_html(
                 f"""
                 <div
                     class="alert"
@@ -1510,14 +1519,14 @@ with left:
                 unsafe_allow_html=True,
             )
 
-    st.markdown(
+    render_html(
         "</div>",
         unsafe_allow_html=True,
     )
 
 
 with right:
-    st.markdown(
+    render_html(
         '<div class="panel">'
         '<div class="section-title">'
         '📡 THREAT PULSE'
@@ -1631,7 +1640,7 @@ with right:
             "Threat pulse will appear after telemetry arrives."
         )
 
-    st.markdown(
+    render_html(
         "</div>",
         unsafe_allow_html=True,
     )
@@ -1647,7 +1656,7 @@ left, right = st.columns(
 )
 
 with left:
-    st.markdown(
+    render_html(
         '<div class="panel">'
         '<div class="section-title">'
         '🎯 RISK DISTRIBUTION'
@@ -1720,14 +1729,14 @@ with left:
         },
     )
 
-    st.markdown(
+    render_html(
         "</div>",
         unsafe_allow_html=True,
     )
 
 
 with right:
-    st.markdown(
+    render_html(
         '<div class="panel">'
         '<div class="section-title">'
         '🎯 SCENARIO THREAT MATRIX'
@@ -1827,7 +1836,7 @@ with right:
 
         html += "</div>"
 
-        st.markdown(
+        render_html(
             html,
             unsafe_allow_html=True,
         )
@@ -1836,7 +1845,7 @@ with right:
             "Scenario matrix will populate after telemetry arrives."
         )
 
-    st.markdown(
+    render_html(
         "</div>",
         unsafe_allow_html=True,
     )
@@ -1846,13 +1855,13 @@ with right:
 # DEFENSE TOPOLOGY
 # ============================================================
 
-st.markdown(
+render_html(
     '<div class="panel">'
     '<div class="section-title">'
     '🌐 DEFENSE TOPOLOGY'
     '</div>',
-    unsafe_allow_html=True,
 )
+
 
 nodes = [
     ("📡", "Telemetry"),
@@ -1879,28 +1888,28 @@ for index, (icon, name) in enumerate(nodes):
 
 topology += "</div>"
 
-st.markdown(
+render_html(
     topology,
-    unsafe_allow_html=True,
 )
 
-st.markdown(
+
+render_html(
     "</div>",
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
 # MODEL + SAFETY
 # ============================================================
 
-st.markdown(
+render_html(
     '<div class="panel">'
     '<div class="section-title">'
     '🧠 MODEL INTELLIGENCE & SAFETY'
     '</div>',
-    unsafe_allow_html=True,
 )
+
 
 m1, m2, m3, m4 = st.columns(4)
 
@@ -1961,23 +1970,23 @@ st.info(
     "actuate physical breakers."
 )
 
-st.markdown(
+render_html(
     "</div>",
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
 # LATEST EVENTS
 # ============================================================
 
-st.markdown(
+render_html(
     '<div class="panel">'
     '<div class="section-title">'
     '📋 LATEST SECURITY EVENTS'
     '</div>',
-    unsafe_allow_html=True,
 )
+
 
 if not events_df.empty:
     table_cols = [
@@ -2042,17 +2051,17 @@ else:
         "No audit events available yet."
     )
 
-st.markdown(
+render_html(
     "</div>",
-    unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.markdown(
+render_html(
     f"""
     <div class="footer">
         AI-CyberShield · XGBoost + Isolation Forest + SHAP ·
@@ -2060,5 +2069,5 @@ st.markdown(
         Simulated telemetry for controlled demonstration
     </div>
     """,
-    unsafe_allow_html=True,
 )
+
