@@ -13,7 +13,7 @@ xgboost==3.2.0
 joblib==1.4.2
 shap==0.50.0
 
-streamlit==1.41.1
+streamlit==1.64.0
 streamlit-autorefresh==1.0.1
 requests==2.32.3
 plotly==5.24.1
