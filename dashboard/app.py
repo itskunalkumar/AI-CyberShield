@@ -580,8 +580,18 @@ if not events_df.empty and {"attack_probability", "anomaly_score", "risk_score"}
                                mode="lines", line=dict(color="rgba(34,211,238,.35)", width=2), hoverinfo="skip"))
     fig.add_trace(go.Mesh3d(x=[0, 1, 1, 0], y=[0, 0, 1, 1], z=[80] * 4, i=[0, 0], j=[1, 2], k=[2, 3],
                             color="#fb7185", opacity=.12, hoverinfo="skip"))
-    st.markdown('<div class="section-title">🌌 3D Threat Space · Attack × Anomaly × Risk <span style="opacity:.6">(auto-rotating · drag to take control)</span></div>', unsafe_allow_html=True)
-    components.html(rotating_plot(fig, 500), height=506)
+    st.markdown(
+    '<div class="section-title">🌌 3D Threat Space · Attack × Anomaly × Risk</div>',
+    unsafe_allow_html=True
+    )
+
+    st.plotly_chart(
+    fig,
+    use_container_width=True,
+    config={
+        "displayModeBar": False
+        }
+    )
 
 
 # ============================================================
