@@ -319,7 +319,9 @@ Feature selection uses numeric telemetry only. Labels and attacker-annotation co
 
 ## 👤 Author
 
-**Kunal Kumar**: [@itskunalkumar](https://github.com/itskunalkumar)
+**Kunal Kumar**
+Mechanical Engineering graduate transitioning into Data Science & ML Engineering
+🔗 [GitHub](https://github.com/itskunalkumar)
 
 <div align="center">
 
