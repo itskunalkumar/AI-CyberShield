@@ -159,7 +159,7 @@ docker compose up --build
 
 | Service | URL |
 | :--- | :--- |
-| 🖥️ Dashboard (Local) | http://localhost:8501 |
+| 📊 Dataset | https://zenodo.org/records/20004612 |
 | 🖥️ Dashboard (AWS Live) | http://ai-cybershield-alb-870998626.ap-south-1.elb.amazonaws.com/ |
 | ⚙️ API + interactive docs (Local) | http://localhost:8001/docs |
 | ⚙️ API + interactive docs (AWS Live) | http://ai-cybershield-alb-870998626.ap-south-1.elb.amazonaws.com/docs |
